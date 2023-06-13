@@ -1,16 +1,14 @@
 # syntax=docker/dockerfile:1
 
-FROM golang:1.20.5
+FROM golang:1.19
 
 WORKDIR /build
 
-COPY go.mod go.sum ./
-
+COPY go.mod go.sum ../
 RUN go mod download
 
-COPY *.go ./
+COPY *.go ../
 
-RUN go build -o ./docker-gs-ping .../cmd/shortURL/
+RUN go build -o /linkshorter .../cmd/shortURL/main.go
 
-CMD ["/docker-gs-ping"]
-
+CMD ["/linkshorter"]
