@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package pb;
+
+service ShortUrl {
+    rpc CreateUrl(Long) returns (Short) {}
+    rpc GetUrl(Short) returns (Long) {}
+}
+
+message Long {
+    string link = 1;
+}
+
+message Short {
+    string link = 1;
+}
