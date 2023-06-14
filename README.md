@@ -26,7 +26,7 @@ The solution should meet the following conditions:
     - The implemented functionality is covered by unit tests.
 
 Result as a public repository on github.com.
-###### Thanks ChatGPT
+###### Thanks for translation ChatGPT
 ## Quickstart
 ### Params
 ```sh
