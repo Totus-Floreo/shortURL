@@ -1,14 +1,25 @@
 # syntax=docker/dockerfile:1
 
-FROM golang:1.20.5
+FROM golang:1.19
 
-WORKDIR /build
+ENV httpport=:8080
+ENV gRPCport=:50051
 
-COPY go.mod go.sum ../
+WORKDIR /app
+
+COPY go.mod .
+COPY go.sum .
+
 RUN go mod download
 
-COPY *.go ../
+COPY . .
 
-RUN go build -o /linkshorter .../cmd/shortURL/main.go
+EXPOSE 8080
 
-CMD ["/linkshorter"]
+EXPOSE 50051
+
+WORKDIR /app/cmd/shortURL
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o shorturl .
+
+ENTRYPOINT ["./shorturl"]
