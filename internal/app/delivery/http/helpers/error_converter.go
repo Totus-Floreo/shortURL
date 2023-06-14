@@ -8,16 +8,21 @@ import (
 )
 
 func HTTPError(c *gin.Context, err error) {
+	ginError := gin.Error{
+		Err: err,
+	}
 	switch err {
 	case domain.ErrorGenerateTimeout:
-		c.AbortWithError(http.StatusInternalServerError, err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, ginError.JSON())
 	case domain.ErrorLinkNotFound:
-		c.AbortWithError(http.StatusNotFound, err)
+		c.AbortWithStatusJSON(http.StatusNotFound, ginError.JSON())
 	case domain.ErrorInvalidDecode:
-		c.AbortWithError(http.StatusBadRequest, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, ginError.JSON())
+	case domain.ErrorInvalidShort:
+		c.AbortWithStatusJSON(http.StatusBadRequest, ginError.JSON())
 	case domain.ErrorInvalidLink:
-		c.AbortWithError(http.StatusBadRequest, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, ginError.JSON())
 	default:
-		c.AbortWithError(http.StatusInternalServerError, err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, ginError.JSON())
 	}
 }
