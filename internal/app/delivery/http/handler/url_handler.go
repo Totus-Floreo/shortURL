@@ -12,6 +12,10 @@ type UrlHandler struct {
 	Service domain.IUrlService
 }
 
+type Response struct {
+	Link string `json:"link"`
+}
+
 func NewUrlHandler(service domain.IUrlService) *UrlHandler {
 	return &UrlHandler{
 		Service: service,
@@ -31,7 +35,7 @@ func (h *UrlHandler) CreateUrl(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, short)
+	c.JSON(http.StatusCreated, Response{Link: short})
 }
 
 func (h *UrlHandler) GetUrl(c *gin.Context) {
@@ -43,5 +47,5 @@ func (h *UrlHandler) GetUrl(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusFound, long)
+	c.JSON(http.StatusOK, Response{Link: long})
 }

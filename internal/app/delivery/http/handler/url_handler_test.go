@@ -1,6 +1,7 @@
 package http
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -32,7 +33,7 @@ var Tests = []TestCase{
 		Long:         "google.com",
 		ServiceError: nil,
 		AddedAt:      1686557090,
-		StatusCode:   http.StatusOK,
+		StatusCode:   http.StatusCreated,
 	},
 	TestCase{
 		Name:         "Bad Json",
@@ -57,7 +58,7 @@ var Tests = []TestCase{
 		Long:         "google.com",
 		ServiceError: nil,
 		AddedAt:      1686557090,
-		StatusCode:   http.StatusFound,
+		StatusCode:   http.StatusOK,
 	},
 	TestCase{
 		Name:         "Service Error",
@@ -92,8 +93,11 @@ func TestCreateUrl_Success(t *testing.T) {
 
 	router.ServeHTTP(w, req)
 
+	response := make(map[string]string)
+	json.Unmarshal(w.Body.Bytes(), &response)
+
 	require.Equal(t, Tests[0].StatusCode, w.Code)
-	require.Equal(t, Tests[0].Short, strings.Trim(w.Body.String(), `"/`))
+	require.Equal(t, Tests[0].Short, response["link"])
 }
 
 func TestCreateUrl_BadJson(t *testing.T) {
@@ -135,8 +139,11 @@ func TestCreateUrl_ServiceError(t *testing.T) {
 
 	router.ServeHTTP(w, req)
 
+	response := make(map[string]string)
+	json.Unmarshal(w.Body.Bytes(), &response)
+
 	require.Equal(t, Tests[2].StatusCode, w.Code)
-	require.Equal(t, Tests[2].Short, strings.Trim(w.Body.String(), `"/`))
+	require.Equal(t, Tests[2].ServiceError.Error(), response["error"])
 }
 
 // Get
@@ -159,8 +166,11 @@ func TestGetUrl_Success(t *testing.T) {
 
 	router.ServeHTTP(w, req)
 
+	response := make(map[string]string)
+	json.Unmarshal(w.Body.Bytes(), &response)
+
 	require.Equal(t, Tests[3].StatusCode, w.Code)
-	require.Equal(t, Tests[3].Long, strings.Trim(w.Body.String(), `"/`))
+	require.Equal(t, Tests[3].Long, response["link"])
 }
 
 func TestGetUrl_ServiceError(t *testing.T) {
@@ -173,13 +183,17 @@ func TestGetUrl_ServiceError(t *testing.T) {
 	w := httptest.NewRecorder()
 	_, router := gin.CreateTestContext(w)
 
-	service.EXPECT().GetUrl(gomock.Any(), Tests[3].Short).Return(Tests[3].Long, Tests[3].ServiceError)
+	service.EXPECT().GetUrl(gomock.Any(), Tests[4].Short).Return(Tests[4].Long, Tests[4].ServiceError)
 
 	router.GET("/:link", handler.GetUrl)
 
-	req, _ := http.NewRequest("GET", fmt.Sprintf("/%s", Tests[3].Short), nil)
+	req, _ := http.NewRequest("GET", fmt.Sprintf("/%s", Tests[4].Short), nil)
 
 	router.ServeHTTP(w, req)
 
-	require.Equal(t, Tests[3].StatusCode, w.Code)
+	response := make(map[string]string)
+	json.Unmarshal(w.Body.Bytes(), &response)
+
+	require.Equal(t, Tests[4].StatusCode, w.Code)
+	require.Equal(t, Tests[4].ServiceError.Error(), response["error"])
 }
