@@ -2,9 +2,9 @@ package service
 
 import "regexp"
 
-func CheckLink(link string) bool {
+const pattern = `^(https?://)?[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}(:[0-9]+)?(/.*)?$`
 
-	pattern := `^(https?://)?[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}(:[0-9]+)?(/.*)?$`
+func CheckLink(link string) bool {
 
 	matched, err := regexp.MatchString(pattern, link)
 	if err != nil {

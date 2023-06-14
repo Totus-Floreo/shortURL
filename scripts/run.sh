@@ -1,9 +1,9 @@
 #!/bin/bash
 
-pg_url=postgres:password@localhost:32768/links
-PORT=3010
-gRPCport=3011
+pg_url=postgres:password@localhost:32773/links
+httpport=:3011
+gRPCport=:3022
 
-export pg_url PORT gRPCport
+export pg_url httpport gRPCport
 
 go run ./cmd/shortURL/main.go -dbType pgx

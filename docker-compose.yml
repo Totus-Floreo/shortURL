@@ -1,0 +1,22 @@
+version: '3'
+services:
+  shorturl:
+    build: .
+    image: shorturl:latest
+    environment:
+      - pg_url=postgres:password@postgres:5432/links
+    ports:
+      - "8080"
+      - "50051"
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=links
+    volumes:
+      - ./scripts/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      

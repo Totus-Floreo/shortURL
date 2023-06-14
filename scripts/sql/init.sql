@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS links (
+    id SERIAL PRIMARY KEY,
+    short VARCHAR(255) NOT NULL,
+    "long" VARCHAR(255) NOT NULL,
+    added BIGINT
+);
+
+ALTER TABLE IF EXISTS links OWNER TO postgres;

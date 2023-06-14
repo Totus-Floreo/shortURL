@@ -9,12 +9,14 @@ import (
 func GRPCError(err error) error {
 	switch err {
 	case domain.ErrorGenerateTimeout:
-		return status.Errorf(codes.Canceled, "Generate link timeout")
+		return status.Errorf(codes.Canceled, "Error: %s", err.Error())
 	case domain.ErrorLinkNotFound:
-		return status.Errorf(codes.NotFound, "Link not found")
+		return status.Errorf(codes.NotFound, "Error: %s", err.Error())
+	case domain.ErrorInvalidShort:
+		return status.Errorf(codes.InvalidArgument, "Error: %s", err.Error())
 	case domain.ErrorInvalidLink:
-		return status.Errorf(codes.InvalidArgument, "Link is broken")
+		return status.Errorf(codes.InvalidArgument, "Error: %s", err.Error())
 	default:
-		return status.Errorf(codes.Internal, "Internal Error")
+		return status.Errorf(codes.Internal, "Error: %s", err.Error())
 	}
 }
