@@ -59,6 +59,11 @@ func (s *UrlService) CreateUrl(ctx context.Context, long string) (string, error)
 }
 
 func (s UrlService) GetUrl(ctx context.Context, shortUrl string) (string, error) {
+
+	if len(shortUrl) > 10 {
+		return "", domain.ErrorInvalidShort
+	}
+
 	data, err := s.DB.GetUrl(ctx, shortUrl)
 	if err != nil {
 		return "", err

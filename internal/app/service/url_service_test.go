@@ -180,11 +180,18 @@ func TestGetUrl(t *testing.T) {
 			Error:   nil,
 		},
 		TestCase{
-			Name:    "Fail",
+			Name:    "Service Error",
 			Short:   "BadLink123",
 			Long:    "",
 			AddedAt: 0,
 			Error:   domain.ErrorLinkNotFound,
+		},
+		TestCase{
+			Name:    "Len Error",
+			Short:   "0123456789more",
+			Long:    "",
+			AddedAt: 0,
+			Error:   domain.ErrorInvalidShort,
 		},
 	}
 	ctx := context.Background()
@@ -203,7 +210,9 @@ func TestGetUrl(t *testing.T) {
 				AddedAt: test.AddedAt,
 			}
 
-			db.EXPECT().GetUrl(ctx, test.Short).Return(&urlLong, test.Error)
+			if test.Name != "Len Error" {
+				db.EXPECT().GetUrl(ctx, test.Short).Return(&urlLong, test.Error)
+			}
 
 			long, err := service.GetUrl(ctx, test.Short)
 
