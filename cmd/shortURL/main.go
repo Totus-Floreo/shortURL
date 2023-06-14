@@ -26,7 +26,6 @@ import (
 
 func main() {
 	log.Printf("Starting...\n")
-
 	zerologger := zerolog.New(os.Stderr)
 
 	dbType := flag.String("dbType", "pgx", "Type of database (pgx or inmemory)")
@@ -52,7 +51,7 @@ func main() {
 	handlers := route.NewUrlHandler(service)
 	grpcHandler := grpchandler.NewShortUrlServer(service)
 
-	listener, err := net.Listen("tcp", fmt.Sprintf("localhost:%s", os.Getenv("gRPCport")))
+	listener, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0%s", os.Getenv("gRPCport")))
 	if err != nil {
 		log.Fatalf("Failed to listen: %v\n", err)
 	}
@@ -80,7 +79,7 @@ func main() {
 	router.GET("/:link", handlers.GetUrl)
 	router.POST("/", handlers.CreateUrl)
 
-	if err := router.Run(); err != nil {
+	if err := router.Run(os.Getenv("httpport")); err != nil {
 		log.Fatalf("Failed to serve http: %v", err)
 	}
 }
