@@ -27,10 +27,10 @@ func NewGenerateLinkService() *GenerateLinkService {
 
 func (s *GenerateLinkService) GenerateShortLink() (string, int64) {
 	s.Mux.Lock()
-	defer s.Mux.Unlock()
+	unix := time.Now().Unix()
+	s.Mux.Unlock()
 
 	var builder strings.Builder
-	unix := time.Now().Unix()
 	chars := []rune(LowercaseLetters + UppercaseLetters + Numbers + Underscore)
 
 	seed := rand.NewSource(unix)
