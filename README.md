@@ -52,6 +52,8 @@ like this
 ./scripts/run.sh
 ```
 ### Docker Container and External DB
+Link to docker hub => [shorturl](https://hub.docker.com/r/totusfloreo/shorturl)
+
 How to build
 ```sh
 docker build . --tag shorturl
