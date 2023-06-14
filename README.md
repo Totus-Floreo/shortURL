@@ -78,3 +78,27 @@ docker compose up -d
 #port forwarding is not displayed in docker desktop
 docker compose ps
 ```
+## Specification
+The API functionality includes the following methods:
+
+    Create Shortened Link (POST):
+        Method: POST
+        Path: /
+        Body: Schema
+        Response: Schema
+        Description: This method accepts the original URL in the request body and saves it in the database. It returns a shortened link consisting of 10 characters, including lowercase and uppercase letters, digits, and underscores.
+
+    Get Original URL (GET):
+        Method: GET
+        Path: /{short}
+        Response: Schema
+        Description: This method accepts the shortened link as a path parameter and returns the corresponding original URL associated with it.
+    
+To use the gRPC protocol, please look at the [protobuf file](https://github.com/Totus-Floreo/shortURL/blob/main/internal/app/domain/proto/short_url.proto), use schema too
+
+## Schema
+```json
+{
+    "link":"your_link"
+}
+```
